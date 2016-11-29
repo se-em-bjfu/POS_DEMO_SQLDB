@@ -6,11 +6,11 @@ package bjfu.em.se.pos.domain;
  *
  */
 public class ProductDescription {
-	private String id;
+	private long id;
 	private String name;
 	private String description;
 	private int price;
-	public ProductDescription(String id, String name, String description,
+	public ProductDescription(long id, String name, String description,
 			int price) {
 		super();
 		this.id = id;
@@ -18,7 +18,7 @@ public class ProductDescription {
 		this.description = description;
 		this.price = price;
 	}
-	public String getId() {
+	public long getId() {
 		return id;
 	}
 	public String getName() {

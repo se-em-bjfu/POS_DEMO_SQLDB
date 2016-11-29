@@ -3,6 +3,7 @@ package bjfu.em.se.pos.ui;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
+import java.io.IOException;
 import java.sql.SQLException;
 
 import javax.swing.JButton;
@@ -13,6 +14,7 @@ import javax.swing.UIManager;
 import bjfu.em.se.pos.domain.ProductCatalog;
 import bjfu.em.se.pos.domain.Register;
 import bjfu.em.se.pos.domain.Store;
+import org.hsqldb.cmdline.SqlToolError;
 
 
 public class MainFrame extends JFrame {
@@ -44,7 +46,12 @@ public class MainFrame extends JFrame {
 		JButton btnShowSales = new JButton("察看销售记录");
 		btnShowSales.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				SaleListDialog.showDialog(store.getSales());
+				try {
+					SaleListDialog.showDialog(store.getSales());
+				} catch (Exception e) {
+					JOptionPane.showMessageDialog(MainFrame.this,"数据库操作失败！");
+					e.printStackTrace();
+				}
 			}
 		});
 		btnShowSales.setBounds(277, 62, 173, 83);

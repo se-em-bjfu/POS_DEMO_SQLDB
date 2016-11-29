@@ -18,14 +18,26 @@ import bjfu.em.se.pos.domain.payment.PaymentType;
  *
  */
 public class Sale {
+	private long id;
 	private boolean isComplete=false;
 	private List<SalesLineItem> lineItems;
 	private Payment payment=null;
 	private Date date;
 	public Sale() {
 		lineItems=new ArrayList<SalesLineItem> ();
-		date = new Date(); 
+		date = new Date();
+		isComplete=false;
+		id=-1;
 	}
+
+	public Sale(long id, List<SalesLineItem> lineItems, Payment payment, Date date) {
+		this.id = id;
+		this.lineItems = lineItems;
+		this.payment = payment;
+		this.date = date;
+		this.isComplete=true;
+	}
+
 	/**
 	 * 输入新的购买商品
 	 * @param desc 商品信息
@@ -41,7 +53,7 @@ public class Sale {
 	 * 标记商品输入结束
 	 */
 	public void becomeComplete() {
-		isComplete=true;		
+		isComplete=true;
 	}
 	public int getTotal() {
 		int total=0;
@@ -52,18 +64,19 @@ public class Sale {
 		return total;
 	}
 	public int makePayment(int amount, PaymentType type) {
+		int total=getTotal();
 		switch(type) {
 		case ByCash:
-			payment=new CashPayment(amount);
+			payment=new CashPayment(total);
 			break;
 		case ByCreditCard:
-			payment=new CreditCardPayment(amount);
+			payment=new CreditCardPayment(total);
 			break;
 		case ByCheck:
-			payment=new CheckPayment(amount);
+			payment=new CheckPayment(total);
 			break;
 		}
-		return amount-getTotal();
+		return amount-total;
 	}
 	public List<SalesLineItem> getLineItems() {
 		return Collections.unmodifiableList(lineItems);
@@ -81,6 +94,12 @@ public class Sale {
 	public Date getDate() {
 		return date;
 	}
-	
-	
+
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
 }

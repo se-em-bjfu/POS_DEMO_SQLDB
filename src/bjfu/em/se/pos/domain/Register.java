@@ -1,8 +1,10 @@
 package bjfu.em.se.pos.domain;
 
+import java.io.IOException;
 import java.sql.SQLException;
 
 import bjfu.em.se.pos.domain.payment.PaymentType;
+import org.hsqldb.cmdline.SqlToolError;
 
 /***
  * 收款台类
@@ -36,7 +38,7 @@ public class Register {
 	 * @throws SQLException 
 	 */
 	public ProductDescription enterItem(String itemId,int qty) throws ProductNotFoundException, SQLException{
-		ProductDescription desc=productCatalog.getProduct(itemId);
+		ProductDescription desc=productCatalog.getProduct(Long.parseLong(itemId));
 		if (desc==null) {
 			throw new ProductNotFoundException(itemId);
 		}
@@ -57,7 +59,7 @@ public class Register {
 	 * @param type
 	 * @return 找零金额(单位为分)
 	 */
-	public int makePayment(int amount, PaymentType type){
+	public int makePayment(int amount, PaymentType type) throws SqlToolError, SQLException, IOException {
 		int balance=currentSale.makePayment(amount,type);
 		store.addSale(currentSale);
 		return balance;

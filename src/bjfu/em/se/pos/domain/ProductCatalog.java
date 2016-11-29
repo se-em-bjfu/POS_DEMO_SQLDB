@@ -25,8 +25,8 @@ public class ProductCatalog {
 	 * @return 对应的商品信息
 	 * @throws SQLException 
 	 */
-	public ProductDescription getProduct(String id) throws SQLException {
-		return persistor.findDescriptionById(id);
+	public ProductDescription getProduct(long id) throws SQLException {
+		return persistor.retrieve(id);
 	}
 	
 	/**
@@ -37,9 +37,9 @@ public class ProductCatalog {
 	 * @param price 商品单价
 	 * @throws SQLException 
 	 */
-	public void addProductDescription(String id, String name,String description ,int price) throws SQLException{
+	public void addProductDescription(long id, String name,String description ,int price) throws SQLException{
 		ProductDescription desc=new ProductDescription(id,name,description,price);
-		persistor.saveNewDescription(desc);
+		persistor.create(desc);
 	}
 
 	public List<ProductDescription> listDescriptions() throws SQLException {

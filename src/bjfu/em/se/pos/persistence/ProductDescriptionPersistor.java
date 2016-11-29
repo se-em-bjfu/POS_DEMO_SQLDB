@@ -11,13 +11,14 @@ import java.util.List;
 import bjfu.em.se.pos.domain.ProductDescription;
 
 public class ProductDescriptionPersistor {
-	private Connection conn;
+	private PersistManager persistManager;
 	
-	ProductDescriptionPersistor(Connection conn) {
-		this.conn=conn;
+	ProductDescriptionPersistor(PersistManager persistManager) {
+		this.persistManager=persistManager;
 	}
 	
 	public List<ProductDescription> listDescriptions() throws SQLException {
+		Connection conn=persistManager.getConnection();
 		Statement stat=null;
 		ArrayList<ProductDescription> descriptions=new ArrayList<ProductDescription>();
 		try {
@@ -26,7 +27,7 @@ public class ProductDescriptionPersistor {
 			while (rs.next()) {
 				ProductDescription desc=new
 						ProductDescription(
-								rs.getString("id").trim(),
+								rs.getLong("id"),
 								rs.getString("name").trim(),
 								rs.getString("description").trim(),
 								rs.getInt("price")
@@ -37,18 +38,21 @@ public class ProductDescriptionPersistor {
 		} finally {
 			if (stat!=null) 
 				stat.close();
+			conn.close();
 		}
 	}
-	public ProductDescription findDescriptionById(String id) throws SQLException {
+	public ProductDescription retrieve(long id) throws SQLException {
+		Connection conn=persistManager.getConnection();
 		PreparedStatement stat=null;
+
 		try {
 			stat=conn.prepareStatement("select * from productDescription where id = ?");
-			stat.setString(1, id);
+			stat.setLong(1, id);
 			ResultSet rs=stat.executeQuery();
 			if (rs.next()) {
 				ProductDescription desc=new
 						ProductDescription(
-								rs.getString("id").trim(),
+								rs.getLong("id"),
 								rs.getString("name").trim(),
 								rs.getString("description").trim(),
 								rs.getInt("price")
@@ -60,9 +64,11 @@ public class ProductDescriptionPersistor {
 			if (stat!=null) {
 				stat.close();
 			}
+			conn.close();
 		}
 	}
-	public void saveNewDescription(ProductDescription desc) throws SQLException {
+	public void create(ProductDescription desc) throws SQLException {
+		Connection conn=persistManager.getConnection();
 		PreparedStatement stat=null;
 		try {
 			stat=conn.prepareStatement("insert into productDescription(name,description,price)"
@@ -74,7 +80,7 @@ public class ProductDescriptionPersistor {
 		} finally {
 			if (stat!=null) 
 				stat.close();
+			conn.close();
 		}
-		
 	}
 }

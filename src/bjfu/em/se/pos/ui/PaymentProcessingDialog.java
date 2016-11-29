@@ -4,6 +4,8 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
+import java.io.IOException;
+import java.sql.SQLException;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -16,6 +18,7 @@ import javax.swing.SwingConstants;
 
 import bjfu.em.se.pos.domain.Register;
 import bjfu.em.se.pos.domain.payment.PaymentType;
+import org.hsqldb.cmdline.SqlToolError;
 
 public class PaymentProcessingDialog extends JDialog {
 	private JTextField txtAmountTendered;
@@ -94,6 +97,13 @@ public class PaymentProcessingDialog extends JDialog {
 				));			
 		} catch(NumberFormatException exp) {
 			JOptionPane.showMessageDialog(this,"付款金额错误！");
+		} catch (SqlToolError sqlToolError) {
+			JOptionPane.showMessageDialog(this,"数据库操作失败！");
+			sqlToolError.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 	}
 }
